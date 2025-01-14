@@ -1,31 +1,31 @@
-package finalprojectmatchmaking.yahavler25a10221;
+package finalproject.yahavler25a10221chatmongo.convertors;
 
+import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
+import finalproject.yahavler25a10221chatmongo.entities.MessageEntity;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
 public class MessageConverter {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public MessageBoundary convertEntityToBoundary(MessageEntity messageEntity){
-        MessageBoundary messageBoundary = new MessageBoundary();
-        messageBoundary.setSenderId(messageEntity.getSenderId());
-        messageBoundary.setReceiverId(messageEntity.getReceiverId());
-        messageBoundary.setContent(messageEntity.getContent());
-        messageBoundary.setTimestamp(messageEntity.getTimestamp());
-        return messageBoundary;
-    }
-    public MessageEntity convertBoundaryToEntity(MessageBoundary messageBoundary){
-        MessageEntity messageEntity = new MessageEntity();
-        messageEntity.setSenderId(messageBoundary.getSenderId());
-        messageEntity.setReceiverId(messageBoundary.getReceiverId());
-        messageEntity.setContent(messageBoundary.getContent());
-        messageEntity.setTimestamp(messageBoundary.getTimestamp());
-        return messageEntity;
+    public MessageEntity convertMessageBoundaryToEntity(MessageBoundary messageBoundary) {
+        MessageEntity entity = new MessageEntity();
+        entity.setId(messageBoundary.getId());
+        entity.setSenderId(messageBoundary.getSenderId());
+        entity.setReceiverId(messageBoundary.getReceiverId());
+        entity.setContent(messageBoundary.getContent());
+        entity.setTimestamp(messageBoundary.getTimestamp());
+        return entity;
     }
 
-
-
+    public MessageBoundary convertMessageEntityToBoundary(MessageEntity messageEntity) {
+        MessageBoundary boundary = new finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary();
+        boundary.setId(messageEntity.getId());
+        boundary.setSenderId(messageEntity.getSenderId());
+        boundary.setReceiverId(messageEntity.getReceiverId());
+        boundary.setContent(messageEntity.getContent());
+        boundary.setTimestamp(messageEntity.getTimestamp());
+        return boundary;
+    }
 }

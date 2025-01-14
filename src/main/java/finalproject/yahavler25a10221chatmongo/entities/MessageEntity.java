@@ -1,14 +1,17 @@
-package finalprojectmatchmaking.yahavler25a10221;
-import jakarta.persistence.*;
+package finalproject.yahavler25a10221chatmongo.entities;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "messages")
+@Document(collection = "messages")
 
 public class MessageEntity {
     @Id
     private String id;
-
+    private String conversationId;
     private String senderId;
     private String receiverId;
     private String content;
@@ -18,19 +21,20 @@ public class MessageEntity {
     public MessageEntity() {
     }
 
-    public MessageEntity(String senderId, String receiverId, String content) {
-        this.senderId = senderId;
-        this.receiverId = receiverId;
-        this.content = content;
-        this.timestamp = LocalDateTime.now();
-    }
-    // Getters and Setters
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
     }
 
     public String getSenderId() {
@@ -69,6 +73,7 @@ public class MessageEntity {
     public String toString() {
         return "MessageEntity{" +
                 "id='" + id + '\'' +
+                ", conversationId='" + conversationId + '\'' +
                 ", senderId='" + senderId + '\'' +
                 ", receiverId='" + receiverId + '\'' +
                 ", content='" + content + '\'' +

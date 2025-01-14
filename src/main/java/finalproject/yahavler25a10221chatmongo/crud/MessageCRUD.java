@@ -1,20 +1,11 @@
-package finalprojectmatchmaking.yahavler25a10221;
+package finalproject.yahavler25a10221chatmongo.crud;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import finalproject.yahavler25a10221chatmongo.entities.MessageEntity;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
-@Repository
-public interface MessageCRUD extends JpaRepository<MessageEntity, Long> {
-    List<MessageEntity> findAllBySenderIdAndReceiverId(String senderId, String receiverId);
+public interface MessageCRUD extends MongoRepository<MessageEntity, String> {
 
-    List<MessageEntity> findAllBySenderIdAndReceiverIdAndContentContaining(String senderId, String receiverId, String keyword);
-
-    List<MessageEntity> findAllBySenderIdAndReceiverIdAndTimestampBetween(String senderId, String receiverId, LocalDateTime startDate, LocalDateTime endDate);
-
-    void deleteAll();
 }
 
 
