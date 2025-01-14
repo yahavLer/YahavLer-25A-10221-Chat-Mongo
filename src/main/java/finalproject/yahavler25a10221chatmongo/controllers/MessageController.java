@@ -18,21 +18,27 @@ public class MessageController {
 
     @PostMapping("/send")
     public MessageBoundary sendMessage(
-            @RequestParam String conversationId,
-            @RequestParam String senderId,
-            @RequestParam String receiverId,
-            @RequestBody String content) {
-        return messageService.sendMessage(conversationId, senderId, receiverId, content);
+            @RequestBody  MessageBoundary messageBoundary,
+            @RequestParam String conversationId) {
+        return messageService.sendMessage(conversationId,messageBoundary);
     }
 
     @GetMapping("/conversation/{conversationId}")
-    public List<MessageBoundary> getMessagesByConversationId(@PathVariable String conversationId) {
+    public List<MessageBoundary> getMessagesByConversationId(@PathVariable("conversationId") String conversationId) {
         return messageService.getMessagesByConversationId(conversationId);
     }
 
     @GetMapping("/user/{userId}")
-    public List<MessageBoundary> getMessagesByUserId(@PathVariable String userId) {
+    public List<MessageBoundary> getMessagesByUserId(@PathVariable("userId") String userId) {
         return messageService.getMessagesByUserId(userId);
+    }
+
+    @GetMapping("/all")
+    public List<MessageBoundary> getAllMessages(
+            @RequestParam String userId,
+            @RequestParam int size,
+            @RequestParam int page) {
+        return messageService.getAllMessages(userId,size, page);
     }
 /*
     @GetMapping("/search")
