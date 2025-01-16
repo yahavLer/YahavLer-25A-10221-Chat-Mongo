@@ -88,4 +88,18 @@ public class MessageServiceImpl implements MessageService {
         List<MessageBoundary> messageBoundaryList = this.mongoTemplate.find(query, MessageBoundary.class);
         return messageBoundaryList;
     }
+
+    @Override
+    public MessageBoundary getMessageById(String messageId) {
+        LocalDateTime now = LocalDateTime.now();
+        MessageBoundary messageBoundary = this.mongoTemplate
+                .query(MessageEntity.class)
+                .inCollection(messageId)
+                .as(MessageEntity.class)
+                .matching(query(where("timestamp").lt(now)).addCriteria(where("id").is(messageId)))
+                .first()
+                .map(this.messageConverter::convertMessageEntityToBoundary)
+                .orElseThrow(() -> new RuntimeException("could not find message by id: " + messageId));
+        return messageBoundary;
+    }
 }

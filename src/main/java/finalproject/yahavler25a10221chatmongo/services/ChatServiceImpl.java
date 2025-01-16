@@ -1,8 +1,10 @@
 package finalproject.yahavler25a10221chatmongo.services;
 
 import finalproject.yahavler25a10221chatmongo.boudaries.ChatBoundary;
+import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
 import finalproject.yahavler25a10221chatmongo.convertors.ChatConverter;
 import finalproject.yahavler25a10221chatmongo.crud.ChatCRUD;
+import finalproject.yahavler25a10221chatmongo.crud.MessageCRUD;
 import finalproject.yahavler25a10221chatmongo.entities.ChatEntity;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -53,9 +55,9 @@ public class ChatServiceImpl implements ChatService{
     }
 
     @Override
-    public ChatBoundary addMessageToChat(String chatId, String messageId) {
+    public ChatBoundary addMessageToChat(String chatId, MessageBoundary messageBoundary) {
         ChatBoundary chatBoundary = this.getChatByChatId(chatId);
-        chatBoundary.getMessages().add();
+        chatBoundary.getMessages().add(messageBoundary);
         ChatEntity chatEntity = this.chatConverter.convertChatBoundaryToEntity(chatBoundary);
         chatEntity = this.mongoTemplate.save(chatEntity);
         return this.chatConverter.convertChatEntityToBoundary(chatEntity);

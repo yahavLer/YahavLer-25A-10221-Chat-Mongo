@@ -1,6 +1,7 @@
 package finalproject.yahavler25a10221chatmongo.controllers;
 
 import finalproject.yahavler25a10221chatmongo.boudaries.ChatBoundary;
+import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
 import finalproject.yahavler25a10221chatmongo.services.ChatService;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,8 @@ public class ChatController {
         return chatService.getChatsByUserId(userId);
     }
 
-    @PutMapping("add-message/chat/{chatId}/message/{messageId}")
-    public ChatBoundary addMessageToChat(@PathVariable("chatId") String chatId, @PathVariable("messageId") String messageId) {
-        return chatService.addMessageToChat(chatId, messageId);
+    @PutMapping("add-message/chat/{chatId}")
+    public ChatBoundary addMessageToChat(@PathVariable("chatId") String chatId, @RequestBody MessageBoundary messageBoundary) {
+        return chatService.addMessageToChat(chatId, messageBoundary);
     }
 }
