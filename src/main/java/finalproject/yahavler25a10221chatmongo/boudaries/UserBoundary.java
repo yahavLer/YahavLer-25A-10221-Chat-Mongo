@@ -6,7 +6,7 @@ public class UserBoundary {
     private String id;
     private String username;
     private String phoneNumber;
-    private LocalDateTime timeStep;
+    private LocalDateTime timestamp;
 
     // Getters and Setters
 
@@ -34,12 +34,12 @@ public class UserBoundary {
         this.phoneNumber = phoneNumber;
     }
 
-    public LocalDateTime getTimeStep() {
-        return timeStep;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimeStep(LocalDateTime timeStep) {
-        this.timeStep = timeStep;
+    public void setTimestamp(LocalDateTime timeStep) {
+        this.timestamp = timeStep;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class UserBoundary {
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", timeStep=" + timeStep +
+                ", timeStep=" + timestamp +
                 '}';
     }
 }
