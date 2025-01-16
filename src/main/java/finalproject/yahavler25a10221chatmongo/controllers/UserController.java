@@ -16,17 +16,19 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public UserBoundary createUser(@RequestParam String username, @RequestParam String phoneNumber) {
-        return userService.createUser(username, phoneNumber);
+    public UserBoundary createUser(@RequestBody UserBoundary userBoundary) {
+        return userService.createUser(userBoundary);
     }
 
-    @GetMapping("/{userId}")
-    public UserBoundary getUserById(@PathVariable String userId) {
+    @GetMapping("user/{userId}")
+    public UserBoundary getUserById(@PathVariable("userId") String userId) {
         return userService.getUserById(userId);
     }
 
-    @GetMapping
-    public List<UserBoundary> getAllUsers() {
-        return userService.getAllUsers();
+    @GetMapping("/all")
+    public List<UserBoundary> getAllUsers(
+            @RequestParam int size,
+            @RequestParam int page) {
+        return userService.getAllUsers(size, page);
     }
 }

@@ -1,9 +1,12 @@
 package finalproject.yahavler25a10221chatmongo.boudaries;
 
+import java.time.LocalDateTime;
+
 public class UserBoundary {
     private String id;
     private String username;
     private String phoneNumber;
+    private LocalDateTime timeStep;
 
     // Getters and Setters
 
@@ -31,12 +34,21 @@ public class UserBoundary {
         this.phoneNumber = phoneNumber;
     }
 
+    public LocalDateTime getTimeStep() {
+        return timeStep;
+    }
+
+    public void setTimeStep(LocalDateTime timeStep) {
+        this.timeStep = timeStep;
+    }
+
     @Override
     public String toString() {
         return "UserBoundary{" +
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", timeStep=" + timeStep +
                 '}';
     }
 }

@@ -1,14 +1,19 @@
 package finalproject.yahavler25a10221chatmongo.services;
 
 import finalproject.yahavler25a10221chatmongo.boudaries.UserBoundary;
-import finalproject.yahavler25a10221chatmongo.convertors.ChatConverter;
 import finalproject.yahavler25a10221chatmongo.convertors.UserConverter;
-import finalproject.yahavler25a10221chatmongo.crud.ChatCRUD;
 import finalproject.yahavler25a10221chatmongo.crud.UserCRUD;
+import finalproject.yahavler25a10221chatmongo.entities.UserEntity;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,33 +28,50 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserBoundary createUser(String username, String phoneNumber) {
-        return null;
+    public UserBoundary createUser(UserBoundary userBoundary) {
+        UserEntity userEntity = this.userConverter.convertUserBoundaryToEntity(userBoundary);
+        userEntity.setId(UUID.randomUUID().toString());
+        userEntity.setTimestamp(LocalDateTime.now());
+        userEntity = mongoTemplate.insert(UserEntity.class).one(userEntity);
+        return this.userConverter.convertUserEntityToBoundary(userEntity);
     }
 
     @Override
     public UserBoundary getUserById(String userId) {
-        return null;
+        LocalDateTime now = LocalDateTime.now();
+        UserBoundary userBoundary = this.mongoTemplate
+                .query(UserEntity.class)
+                .inCollection(userId)
+                .as(UserEntity.class)
+                .matching(query(where("timestamp").lt(now)).addCriteria(where("id").is(userId)))
+                .first()
+                .map(this.userConverter::convertUserEntityToBoundary)
+                .orElseThrow(() -> new RuntimeException("could not find user by id: " + userId));
+        return userBoundary;
     }
 
     @Override
-    public List<UserBoundary> getAllUsers() {
-        return null;
-    }
-
-    @Override
-    public UserBoundary updateUser(String userId, UserBoundary userBoundary) {
-        return null;
+    public List<UserBoundary> getAllUsers(int size, int page) {
+        Query query = new Query();
+        query.limit(size);
+        query.skip(size * page);
+        List<UserBoundary> userBoundaryList = this.mongoTemplate
+                .find(query, UserEntity.class)
+                .stream()
+                .map(this.userConverter::convertUserEntityToBoundary)
+                .toList();
+        return userBoundaryList;
     }
 
     @Override
     public void deleteUser(String userId) {
-
+        //this.mongoTemplate.remove(query(where("id").is(userId)), UserEntity.class);
+        this.userCRUD.deleteById(userId);
     }
 
     @Override
     public void deleteAllUsers() {
-
+        this.userCRUD.deleteAll();
     }
 
 }

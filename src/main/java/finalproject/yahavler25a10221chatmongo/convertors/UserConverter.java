@@ -12,6 +12,7 @@ public class UserConverter {
         entity.setId(userBoundary.getId());
         entity.setUsername(userBoundary.getUsername());
         entity.setPhoneNumber(userBoundary.getPhoneNumber());
+        entity.setTimestamp(userBoundary.getTimestamp());
         return entity;
     }
 
@@ -20,6 +21,7 @@ public class UserConverter {
         boundary.setId(userEntity.getId());
         boundary.setUsername(userEntity.getUsername());
         boundary.setPhoneNumber(userEntity.getPhoneNumber());
+        boundary.setTimestamp(userEntity.getTimestamp());
         return boundary;
     }
 

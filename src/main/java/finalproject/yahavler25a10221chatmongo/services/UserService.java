@@ -5,10 +5,9 @@ import finalproject.yahavler25a10221chatmongo.boudaries.UserBoundary;
 import java.util.List;
 
 public interface UserService {
-    UserBoundary createUser(String username, String phoneNumber);
+    UserBoundary createUser(UserBoundary userBoundary);
     UserBoundary getUserById(String userId);
-    List<UserBoundary> getAllUsers();
-    UserBoundary updateUser(String userId, UserBoundary userBoundary);
+    List<UserBoundary> getAllUsers(int size, int page);
     void deleteUser(String userId);
     void deleteAllUsers();
 }
