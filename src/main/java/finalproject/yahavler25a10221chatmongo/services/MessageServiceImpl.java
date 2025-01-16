@@ -2,7 +2,6 @@ package finalproject.yahavler25a10221chatmongo.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
@@ -15,10 +14,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import static javax.management.Query.and;
 import static org.springframework.data.mongodb.core.query.Criteria.*;
 import static org.springframework.data.mongodb.core.query.Query.*;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -39,7 +36,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public MessageBoundary sendMessage(String conversationId, MessageBoundary boundary) {
         MessageEntity entity = this.messageConverter.convertMessageBoundaryToEntity(boundary);
-        entity.setConversationId(conversationId);
+        entity.setChatId(conversationId);
         entity.setId(UUID.randomUUID().toString());
         entity.setTimestamp(LocalDateTime.now());
         entity = mongoTemplate.insert(MessageEntity.class).one(entity);

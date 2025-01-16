@@ -16,22 +16,22 @@ public class ChatController {
     }
 
     @PostMapping("/create")
-    public ChatBoundary createChat(@RequestParam String user1Id, @RequestParam String user2Id) {
-        return chatService.createChat(user1Id, user2Id);
+    public ChatBoundary createChat(@RequestBody ChatBoundary chatBoundary,@RequestParam String user1Id, @RequestParam String user2Id) {
+        return chatService.createChat(chatBoundary, user1Id, user2Id);
     }
 
-    @GetMapping("/{chatId}")
-    public ChatBoundary getChatByChatId(@PathVariable String chatId) {
+    @GetMapping("/chat/{chatId}")
+    public ChatBoundary getChatByChatId(@PathVariable ("chatId") String chatId) {
         return chatService.getChatByChatId(chatId);
     }
 
     @GetMapping("/user/{userId}")
-    public List<ChatBoundary> getChatsByUserId(@PathVariable String userId) {
+    public List<ChatBoundary> getChatsByUserId(@PathVariable("userId") String userId) {
         return chatService.getChatsByUserId(userId);
     }
 
-    @PutMapping("/{chatId}/add-message")
-    public ChatBoundary addMessageToChat(@PathVariable String chatId, @RequestParam String messageId) {
+    @PutMapping("add-message/chat/{chatId}/message/{messageId}")
+    public ChatBoundary addMessageToChat(@PathVariable("chatId") String chatId, @PathVariable("messageId") String messageId) {
         return chatService.addMessageToChat(chatId, messageId);
     }
 }

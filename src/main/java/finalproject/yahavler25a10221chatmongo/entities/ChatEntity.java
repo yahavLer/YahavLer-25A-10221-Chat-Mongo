@@ -4,6 +4,7 @@ import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "Chat")
@@ -12,7 +13,7 @@ public class ChatEntity {
     private String id;
     private String user1Id;
     private String user2Id;
-    private String createdAt;
+    private LocalDateTime createdAt;
     private List<MessageBoundary> messages;
 
     // Constructors
@@ -44,11 +45,11 @@ public class ChatEntity {
         this.user2Id = user2Id;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 

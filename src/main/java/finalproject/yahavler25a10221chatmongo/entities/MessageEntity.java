@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class MessageEntity {
     @Id
     private String id;
-    private String conversationId;
+    private String chatId;
     private String senderId;
     private String receiverId;
     private String content;
@@ -29,12 +29,12 @@ public class MessageEntity {
         this.id = id;
     }
 
-    public String getConversationId() {
-        return conversationId;
+    public String getChatId() {
+        return chatId;
     }
 
-    public void setConversationId(String conversationId) {
-        this.conversationId = conversationId;
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
 
     public String getSenderId() {
@@ -73,7 +73,7 @@ public class MessageEntity {
     public String toString() {
         return "MessageEntity{" +
                 "id='" + id + '\'' +
-                ", conversationId='" + conversationId + '\'' +
+                ", conversationId='" + chatId + '\'' +
                 ", senderId='" + senderId + '\'' +
                 ", receiverId='" + receiverId + '\'' +
                 ", content='" + content + '\'' +

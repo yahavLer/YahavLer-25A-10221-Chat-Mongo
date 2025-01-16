@@ -5,7 +5,7 @@ import finalproject.yahavler25a10221chatmongo.boudaries.ChatBoundary;
 import java.util.List;
 
 public interface ChatService {
-    ChatBoundary createChat(String user1Id, String user2Id);
+    ChatBoundary createChat(ChatBoundary chatBoundary,String user1Id, String user2Id);
     ChatBoundary getChatByChatId(String chatId);
     List<ChatBoundary> getChatsByUserId(String userId);
     ChatBoundary addMessageToChat(String chatId, String messageId);
