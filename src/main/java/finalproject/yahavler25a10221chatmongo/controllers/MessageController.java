@@ -1,10 +1,8 @@
 package finalproject.yahavler25a10221chatmongo.controllers;
 import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
 import finalproject.yahavler25a10221chatmongo.services.MessageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -28,10 +26,16 @@ public class MessageController {
         return messageService.getMessagesByConversationId(conversationId);
     }
 
-    @GetMapping("/user/{userId}")
-    public List<MessageBoundary> getMessagesByUserId(@PathVariable("userId") String userId) {
-        return messageService.getMessagesByUserId(userId);
+    @GetMapping("/user/{userId}/receiver/{receiverId}")
+    public List<MessageBoundary> getMessagesByUserIdToReciverId(@PathVariable("userId") String userId, @RequestParam String receiverId) {
+        return messageService.getMessagesByUserIdToReciverId(userId,receiverId);
     }
+    @GetMapping("/user/{userId}/sender/{senderId}")
+    public List<MessageBoundary> getMessagesByUserIdFromSenderId(@PathVariable("userId") String userId, @RequestParam String senderId) {
+        return messageService.getMessagesByUserIdFromSenderId(userId, senderId);
+    }
+
+
 
     @GetMapping("/all")
     public List<MessageBoundary> getAllMessages(

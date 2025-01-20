@@ -59,19 +59,47 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<MessageBoundary> getMessagesByUserId(String userId) {
+    public List<MessageBoundary> getMessagesByUserIdToReciverId(String userId, String receiverId) {
         LocalDateTime now = LocalDateTime.now();
         List<MessageBoundary> messageBoundaryList=this.mongoTemplate
                 .query(MessageEntity.class)
                 .inCollection(userId)
                 .as(MessageEntity.class)
-                .matching(query(where("timestamp").lt(now).andOperator(where("senderId").is(userId),where("receiverId").is(userId))))
+                .matching(
+                        query(where("timestamp").lt(now)
+                                .andOperator(
+                                        where("senderId").is(userId),
+                                        where("receiverId").is(receiverId)
+                                )
+                        ).with(Sort.by(Sort.Order.desc("timestamp")))
+                )
+                .all()
+                .stream()
+                .map(this.messageConverter::convertMessageEntityToBoundary)
+                .toList();
+        return messageBoundaryList;    }
+
+    @Override
+    public List<MessageBoundary> getMessagesByUserIdFromSenderId(String userId, String senderId) {
+        LocalDateTime now = LocalDateTime.now();
+        List<MessageBoundary> messageBoundaryList=this.mongoTemplate
+                .query(MessageEntity.class)
+                .inCollection(userId)
+                .as(MessageEntity.class)
+                .matching(
+                        query(where("timestamp").lt(now)
+                                .andOperator(
+                                        where("senderId").is(senderId),
+                                        where("receiverId").is(userId))
+                        ).with(Sort.by(Sort.Order.desc("timestamp")))
+                )
                 .all()
                 .stream()
                 .map(this.messageConverter::convertMessageEntityToBoundary)
                 .toList();
         return messageBoundaryList;
     }
+
 
     @Override
     public List<MessageBoundary> getAllMessages(String userId, int size, int page) {
@@ -102,4 +130,6 @@ public class MessageServiceImpl implements MessageService {
                 .orElseThrow(() -> new RuntimeException("could not find message by id: " + messageId));
         return messageBoundary;
     }
+
+
 }
