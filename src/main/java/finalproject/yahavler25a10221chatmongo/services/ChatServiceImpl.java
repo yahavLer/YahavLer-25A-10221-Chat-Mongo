@@ -31,14 +31,13 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public ChatBoundary createChat(ChatBoundary chatBoundary, String user1Id, String user2Id) {
-        ChatEntity chatEntity = this.chatConverter.convertChatBoundaryToEntity(chatBoundary);
-        chatEntity.setUser1Id(user1Id);
-        chatEntity.setUser2Id(user2Id);
-        chatEntity.setId(UUID.randomUUID().toString());
-        chatEntity.setCreatedAt(LocalDateTime.now());
-        chatEntity = this.mongoTemplate.insert(ChatEntity.class).one(chatEntity);
-        return this.chatConverter.convertChatEntityToBoundary(chatEntity);
+        ChatBoundary existingChat = findExistingChat(user1Id, user2Id);
+        if (existingChat != null) {
+            throw new RuntimeException("Chat already exists between users " + user1Id + " and " + user2Id);
+        }
+        return createNewChat(user1Id, user2Id);
     }
+
 
     @Override
     public ChatBoundary getChatByChatId(String chatId) {
@@ -88,4 +87,47 @@ public class ChatServiceImpl implements ChatService{
                 .collect(Collectors.toList());
         return chatBoundaryList;
     }
+
+    @Override
+    public ChatBoundary addMessageToChat(String user1Id, String user2Id, MessageBoundary messageBoundary) {
+        ChatBoundary chatBoundary = findExistingChat(user1Id, user2Id);
+        if (chatBoundary == null) {
+            chatBoundary = createNewChat(user1Id, user2Id);
+        }
+        messageBoundary.setId(UUID.randomUUID().toString());
+        messageBoundary.setTimestamp(LocalDateTime.now());
+        chatBoundary.getMessages().add(messageBoundary);
+
+        ChatEntity updatedChatEntity = this.chatConverter.convertChatBoundaryToEntity(chatBoundary);
+        this.mongoTemplate.save(updatedChatEntity);
+
+        return this.chatConverter.convertChatEntityToBoundary(updatedChatEntity);
+    }
+
+    private ChatBoundary findExistingChat(String user1Id, String user2Id) {
+        return this.mongoTemplate
+                .query(ChatEntity.class)
+                .matching(query(
+                        where("user1Id").is(user1Id).andOperator(where("user2Id").is(user2Id))
+                                .orOperator(
+                                        where("user1Id").is(user2Id).andOperator(where("user2Id").is(user1Id))
+                                )
+                ))
+                .first()
+                .map(this.chatConverter::convertChatEntityToBoundary)
+                .orElse(null);
+    }
+
+    private ChatBoundary createNewChat(String user1Id, String user2Id) {
+        ChatEntity newChat = new ChatEntity();
+        newChat.setId(UUID.randomUUID().toString());
+        newChat.setUser1Id(user1Id);
+        newChat.setUser2Id(user2Id);
+        newChat.setCreatedAt(LocalDateTime.now());
+        newChat.setMessages(List.of());
+        ChatEntity savedChat = this.mongoTemplate.insert(newChat);
+        return this.chatConverter.convertChatEntityToBoundary(savedChat);
+    }
+
+
 }
