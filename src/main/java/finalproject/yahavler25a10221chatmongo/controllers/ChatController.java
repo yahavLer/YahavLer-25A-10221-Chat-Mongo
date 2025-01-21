@@ -31,6 +31,11 @@ public class ChatController {
         return chatService.getChatsByUserId(userId);
     }
 
+    @GetMapping("user1/{user1Id}/user2/{user2Id}")
+    public ChatBoundary getChatByUser1IdAndUser2Id(@PathVariable("user1Id") String user1Id, @PathVariable("user2Id") String user2Id) {
+        return chatService.getChatByUser1IdAndUser2Id(user1Id, user2Id);
+    }
+
     @PutMapping("add-message/chat/{chatId}")
     public ChatBoundary addMessageToChat(@PathVariable("chatId") String chatId, @RequestBody MessageBoundary messageBoundary) {
         return chatService.addMessageToChat(chatId, messageBoundary);

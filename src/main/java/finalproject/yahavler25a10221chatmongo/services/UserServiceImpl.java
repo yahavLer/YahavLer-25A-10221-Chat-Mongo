@@ -37,13 +37,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserBoundary getUserById(String userId) {
-        LocalDateTime now = LocalDateTime.now();
+    public UserBoundary getById(String userId) {
         UserBoundary userBoundary = this.mongoTemplate
                 .query(UserEntity.class)
-                .inCollection(userId)
                 .as(UserEntity.class)
-                .matching(query(where("timestamp").lt(now)).addCriteria(where("id").is(userId)))
+                .matching(query(where("id").is(userId)))
                 .first()
                 .map(this.userConverter::convertUserEntityToBoundary)
                 .orElseThrow(() -> new RuntimeException("could not find user by id: " + userId));
@@ -73,5 +71,16 @@ public class UserServiceImpl implements UserService {
     public void deleteAllUsers() {
         this.userCRUD.deleteAll();
     }
+
+    @Override
+    public UserBoundary getByUsername(String username) {
+        UserBoundary userBoundary = this.mongoTemplate
+                .query(UserEntity.class)
+                .as(UserEntity.class)
+                .matching(query(where("username").is(username)))
+                .first()
+                .map(this.userConverter::convertUserEntityToBoundary)
+                .orElseThrow(() -> new RuntimeException("could not find user by username: " + username));
+        return userBoundary;    }
 
 }

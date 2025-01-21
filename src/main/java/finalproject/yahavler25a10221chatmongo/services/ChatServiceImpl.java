@@ -64,13 +64,24 @@ public class ChatServiceImpl implements ChatService{
     }
 
     @Override
+    public ChatBoundary getChatByUser1IdAndUser2Id(String user1Id, String user2Id) {
+        ChatBoundary chatBoundary = this.mongoTemplate
+                .query(ChatEntity.class)
+                .as(ChatEntity.class)
+                .matching(query(where("user1Id").is(user1Id).andOperator(where("user2Id").is(user2Id))))
+                .first()
+                .map(this.chatConverter::convertChatEntityToBoundary)
+                .orElseThrow(() -> new RuntimeException("could not find chat by user1Id: " + user1Id + " and user2Id: " + user2Id));
+        return chatBoundary;
+    }
+
+    @Override
     public List<ChatBoundary> getChatsByUserId(String userId) {
-        LocalDateTime now = LocalDateTime.now();
         List<ChatBoundary> chatBoundaryList = this.mongoTemplate
                 .query(ChatEntity.class)
                 .inCollection(userId)
                 .as(ChatEntity.class)
-                .matching(query(where("createdAt").lt(now)).addCriteria(where("user1Id").is(userId).orOperator(where("user2Id").is(userId))))
+                .matching(query(where("user1Id").is(userId).orOperator(where("user2Id").is(userId))))
                 .all()
                 .stream()
                 .map(this.chatConverter::convertChatEntityToBoundary)

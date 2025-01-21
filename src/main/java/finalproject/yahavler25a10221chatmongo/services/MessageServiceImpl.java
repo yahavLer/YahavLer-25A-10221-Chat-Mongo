@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import finalproject.yahavler25a10221chatmongo.boudaries.ChatBoundary;
 import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
 import finalproject.yahavler25a10221chatmongo.convertors.MessageConverter;
+import finalproject.yahavler25a10221chatmongo.crud.ChatCRUD;
 import finalproject.yahavler25a10221chatmongo.crud.MessageCRUD;
 import finalproject.yahavler25a10221chatmongo.entities.MessageEntity;
 import org.springframework.data.domain.Sort;
@@ -24,7 +26,6 @@ public class MessageServiceImpl implements MessageService {
     private MessageCRUD messageCRUD;
     private MessageConverter messageConverter;
     private MongoTemplate mongoTemplate;
-
 
     public MessageServiceImpl(MessageCRUD messageCRUD, MessageConverter messageConverter, MongoTemplate mongoTemplate) {
         this.messageCRUD = messageCRUD;
@@ -60,17 +61,13 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageBoundary> getMessagesByUserIdToReciverId(String userId, String receiverId) {
-        LocalDateTime now = LocalDateTime.now();
         List<MessageBoundary> messageBoundaryList=this.mongoTemplate
                 .query(MessageEntity.class)
                 .inCollection(userId)
                 .as(MessageEntity.class)
                 .matching(
-                        query(where("timestamp").lt(now)
-                                .andOperator(
-                                        where("senderId").is(userId),
-                                        where("receiverId").is(receiverId)
-                                )
+                        query(where("senderId").is(userId)
+                                .andOperator(where("receiverId").is(receiverId))
                         ).with(Sort.by(Sort.Order.desc("timestamp")))
                 )
                 .all()
@@ -81,16 +78,13 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageBoundary> getMessagesByUserIdFromSenderId(String userId, String senderId) {
-        LocalDateTime now = LocalDateTime.now();
         List<MessageBoundary> messageBoundaryList=this.mongoTemplate
                 .query(MessageEntity.class)
                 .inCollection(userId)
                 .as(MessageEntity.class)
                 .matching(
-                        query(where("timestamp").lt(now)
-                                .andOperator(
-                                        where("senderId").is(senderId),
-                                        where("receiverId").is(userId))
+                        query(where("senderId").is(senderId)
+                                .andOperator(where("receiverId").is(userId))
                         ).with(Sort.by(Sort.Order.desc("timestamp")))
                 )
                 .all()

@@ -6,8 +6,9 @@ import java.util.List;
 
 public interface UserService {
     UserBoundary createUser(UserBoundary userBoundary);
-    UserBoundary getUserById(String userId);
+    UserBoundary getById(String userId);
     List<UserBoundary> getAllUsers(int size, int page);
     void deleteUser(String userId);
     void deleteAllUsers();
+    UserBoundary getByUsername(String username);
 }

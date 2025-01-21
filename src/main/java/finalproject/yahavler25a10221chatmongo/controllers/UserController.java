@@ -20,9 +20,14 @@ public class UserController {
         return userService.createUser(userBoundary);
     }
 
-    @GetMapping("user/{userId}")
-    public UserBoundary getUserById(@PathVariable("userId") String userId) {
-        return userService.getUserById(userId);
+    @GetMapping("/userId/{userId}")
+    public UserBoundary getById(@RequestParam("userId") String userId) {
+        return userService.getById(userId);
+    }
+
+    @GetMapping("/username/{username}")
+    public UserBoundary getByUsername(@RequestParam("username") String username) {
+        return userService.getByUsername(username);
     }
 
     @GetMapping("/all")
