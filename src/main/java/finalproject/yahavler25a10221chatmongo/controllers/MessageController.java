@@ -35,7 +35,18 @@ public class MessageController {
         return messageService.getMessagesByUserIdFromSenderId(userId, senderId);
     }
 
+    @GetMapping("/{messageId}")
+    public MessageBoundary getMessageById(@PathVariable("messageId") String messageId) {
+        return messageService.getMessageById(messageId);
+    }
 
+    @PostMapping("/add")
+    public MessageBoundary addMessage(
+            @RequestParam String content,
+            @RequestParam String senderId,
+            @RequestParam String receiverId) {
+        return messageService.addMessage(content, senderId, receiverId);
+    }
 
     @GetMapping("/all")
     public List<MessageBoundary> getAllMessages(

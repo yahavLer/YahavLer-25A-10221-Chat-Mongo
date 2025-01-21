@@ -44,6 +44,17 @@ public class MessageServiceImpl implements MessageService {
         return this.messageConverter.convertMessageEntityToBoundary(entity);
     }
 
+    public MessageBoundary addMessage(String content, String senderId, String receiverId) {
+        MessageBoundary message = new MessageBoundary();
+        message.setId(UUID.randomUUID().toString());
+        message.setContent(content);
+        message.setSenderId(senderId);
+        message.setReceiverId(receiverId);
+        message.setTimestamp(LocalDateTime.now());
+        return message;
+    }
+
+
     @Override
     public List<MessageBoundary> getMessagesByConversationId(String conversationId) {
         LocalDateTime now = LocalDateTime.now();
