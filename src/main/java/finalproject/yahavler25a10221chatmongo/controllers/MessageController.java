@@ -40,13 +40,7 @@ public class MessageController {
         return messageService.getMessageById(messageId);
     }
 
-    @PostMapping("/add")
-    public MessageBoundary addMessage(
-            @RequestParam String content,
-            @RequestParam String senderId,
-            @RequestParam String receiverId) {
-        return messageService.addMessage(content, senderId, receiverId);
-    }
+
 
     @GetMapping("/all")
     public List<MessageBoundary> getAllMessages(
@@ -78,6 +72,14 @@ public class MessageController {
     public String deleteAllMessages() {
         messageService.deleteAll();
         return "All messages have been deleted";
+    }
+
+    @PostMapping("/add")
+    public MessageBoundary addMessage(
+            @RequestParam String content,
+            @RequestParam String senderId,
+            @RequestParam String receiverId) {
+        return messageService.addMessage(content, senderId, receiverId);
     }
  */
 }

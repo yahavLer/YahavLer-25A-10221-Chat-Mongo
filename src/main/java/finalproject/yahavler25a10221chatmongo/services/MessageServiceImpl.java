@@ -44,25 +44,13 @@ public class MessageServiceImpl implements MessageService {
         return this.messageConverter.convertMessageEntityToBoundary(entity);
     }
 
-    public MessageBoundary addMessage(String content, String senderId, String receiverId) {
-        MessageBoundary message = new MessageBoundary();
-        message.setId(UUID.randomUUID().toString());
-        message.setContent(content);
-        message.setSenderId(senderId);
-        message.setReceiverId(receiverId);
-        message.setTimestamp(LocalDateTime.now());
-        return message;
-    }
-
-
     @Override
     public List<MessageBoundary> getMessagesByConversationId(String conversationId) {
-        LocalDateTime now = LocalDateTime.now();
         List<MessageBoundary> messageBoundaryList=this.mongoTemplate
                 .query(MessageEntity.class)
                 .inCollection(conversationId)
                 .as(MessageEntity.class)
-                .matching(query(where("timestamp").lt(now)).addCriteria(where("conversationId").is(conversationId)))
+                .matching(query(where("conversationId").is(conversationId)))
                 .all()
                 .stream()
                 .map(this.messageConverter::convertMessageEntityToBoundary)
@@ -136,5 +124,17 @@ public class MessageServiceImpl implements MessageService {
         return messageBoundary;
     }
 
+/*
+@Override
+    public MessageBoundary addMessage(String content, String senderId, String receiverId) {
+        MessageBoundary message = new MessageBoundary();
+        message.setId(UUID.randomUUID().toString());
+        message.setContent(content);
+        message.setSenderId(senderId);
+        message.setReceiverId(receiverId);
+        message.setTimestamp(LocalDateTime.now());
+        return message;
+    }
+ */
 
 }

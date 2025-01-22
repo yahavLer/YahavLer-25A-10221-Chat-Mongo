@@ -36,25 +36,11 @@ public class ChatController {
         return chatService.getChatByUser1IdAndUser2Id(user1Id, user2Id);
     }
 
-    @PutMapping("add-message/chat/{chatId}")
-    public ChatBoundary addMessageToChat(@PathVariable("chatId") String chatId, @RequestBody MessageBoundary messageBoundary) {
-        return chatService.addMessageToChat(chatId, messageBoundary);
+    @PostMapping("/add-message")
+    public ChatBoundary addMessageToChat(@RequestParam String user1Id,
+                                         @RequestParam String user2Id,
+                                         @RequestBody MessageBoundary messageBoundary) {
+        return chatService.addMessageToChat(user1Id,user2Id, messageBoundary);
     }
-/// new
-    @PostMapping("/chats/add-message")
-    public ChatBoundary addMessageToChat(
-            @RequestParam String user1Id,
-            @RequestParam String user2Id,
-            @RequestBody MessageBoundary messageBoundary) {
-        return chatService.addMessageToChat(user1Id, user2Id, messageBoundary);
-    }
-
-    @PostMapping("/chats/create")
-    public ChatBoundary createChat(
-            @RequestParam String user1Id,
-            @RequestParam String user2Id) {
-        return chatService.createChat(new ChatBoundary(), user1Id, user2Id);
-    }
-
 
 }

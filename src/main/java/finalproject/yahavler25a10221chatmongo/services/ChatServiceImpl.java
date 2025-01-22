@@ -54,13 +54,22 @@ public class ChatServiceImpl implements ChatService{
     }
 
     @Override
-    public ChatBoundary addMessageToChat(String chatId, MessageBoundary messageBoundary) {
-        ChatBoundary chatBoundary = this.getChatByChatId(chatId);
+    public ChatBoundary addMessageToChat(String user1Id, String user2Id, MessageBoundary messageBoundary) {
+        ChatBoundary chatBoundary = findExistingChat(user1Id, user2Id);
+        if (chatBoundary == null) {
+            chatBoundary = createNewChat(user1Id, user2Id);
+        }
+
+        messageBoundary.setId(UUID.randomUUID().toString());
+        messageBoundary.setTimestamp(LocalDateTime.now());
         chatBoundary.getMessages().add(messageBoundary);
-        ChatEntity chatEntity = this.chatConverter.convertChatBoundaryToEntity(chatBoundary);
-        chatEntity = this.mongoTemplate.save(chatEntity);
-        return this.chatConverter.convertChatEntityToBoundary(chatEntity);
+
+        ChatEntity updatedChatEntity = this.chatConverter.convertChatBoundaryToEntity(chatBoundary);
+        this.mongoTemplate.save(updatedChatEntity);
+
+        return this.chatConverter.convertChatEntityToBoundary(updatedChatEntity);
     }
+
 
     @Override
     public ChatBoundary getChatByUser1IdAndUser2Id(String user1Id, String user2Id) {
@@ -88,21 +97,7 @@ public class ChatServiceImpl implements ChatService{
         return chatBoundaryList;
     }
 
-    @Override
-    public ChatBoundary addMessageToChat(String user1Id, String user2Id, MessageBoundary messageBoundary) {
-        ChatBoundary chatBoundary = findExistingChat(user1Id, user2Id);
-        if (chatBoundary == null) {
-            chatBoundary = createNewChat(user1Id, user2Id);
-        }
-        messageBoundary.setId(UUID.randomUUID().toString());
-        messageBoundary.setTimestamp(LocalDateTime.now());
-        chatBoundary.getMessages().add(messageBoundary);
 
-        ChatEntity updatedChatEntity = this.chatConverter.convertChatBoundaryToEntity(chatBoundary);
-        this.mongoTemplate.save(updatedChatEntity);
-
-        return this.chatConverter.convertChatEntityToBoundary(updatedChatEntity);
-    }
 
     private ChatBoundary findExistingChat(String user1Id, String user2Id) {
         return this.mongoTemplate
