@@ -20,7 +20,7 @@ public class MessageConverter {
     }
 
     public MessageBoundary convertMessageEntityToBoundary(MessageEntity messageEntity) {
-        MessageBoundary boundary = new finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary();
+        MessageBoundary boundary = new MessageBoundary();
         boundary.setId(messageEntity.getId());
         boundary.setSenderId(messageEntity.getSenderId());
         boundary.setReceiverId(messageEntity.getReceiverId());

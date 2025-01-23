@@ -1,6 +1,7 @@
 package finalproject.yahavler25a10221chatmongo.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +35,7 @@ public class MessageServiceImpl implements MessageService {
         this.messageCRUD = messageCRUD;
         this.mongoTemplate =mongoTemplate;
         this.messageConverter = messageConverter;
+        this.chatConverter = chatConverter;
     }
 
 
@@ -46,12 +48,19 @@ public class MessageServiceImpl implements MessageService {
                 .inCollection("messages")
                 .one(entity);
         ChatBoundary chatBoundary = findExistingChat(entity.getSenderId(), entity.getReceiverId());
-        System.out.print("chatBoundary: "+chatBoundary.toString());
         if (chatBoundary == null) {
             chatBoundary= createNewChat(entity.getSenderId(), entity.getReceiverId());
         }
-        chatBoundary.getMessages().add(this.messageConverter.convertMessageEntityToBoundary(entity));
+
+        System.out.print("chatBoundary: "+chatBoundary.toString());
+
+        List<MessageBoundary> mutableMessages = new ArrayList<>(chatBoundary.getMessages());
+        mutableMessages.add(this.messageConverter.convertMessageEntityToBoundary(entity));
+        chatBoundary.setMessages(mutableMessages);
+
         this.mongoTemplate.save(this.chatConverter.convertChatBoundaryToEntity(chatBoundary));
+        System.out.println("Chat updated: " + chatBoundary);
+
         return this.messageConverter.convertMessageEntityToBoundary(entity);
     }
 

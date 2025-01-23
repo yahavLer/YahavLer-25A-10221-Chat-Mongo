@@ -13,6 +13,7 @@ public class ChatConverter {
         boundary.setUser1Id(entity.getUser1Id());
         boundary.setUser2Id(entity.getUser2Id());
         boundary.setMessages(entity.getMessages());
+        boundary.setCreatedAt(entity.getCreatedAt());
         return boundary;
 
     }
@@ -23,6 +24,7 @@ public class ChatConverter {
         entity.setUser1Id(boundary.getUser1Id());
         entity.setUser2Id(boundary.getUser2Id());
         entity.setMessages(boundary.getMessages());
+        entity.setCreatedAt(boundary.getCreatedAt());
         return entity;
     }
 }
