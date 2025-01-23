@@ -44,7 +44,7 @@ public class MessageServiceImpl implements MessageService {
         MessageEntity entity = this.messageConverter.convertMessageBoundaryToEntity(boundary);
         entity.setId(UUID.randomUUID().toString());
         entity.setTimestamp(LocalDateTime.now());
-        entity = mongoTemplate.insert(MessageEntity.class)
+        entity = this.mongoTemplate.insert(MessageEntity.class)
                 .inCollection("messages")
                 .one(entity);
         ChatBoundary chatBoundary = findExistingChat(entity.getSenderId(), entity.getReceiverId());
@@ -57,8 +57,8 @@ public class MessageServiceImpl implements MessageService {
         List<MessageBoundary> mutableMessages = new ArrayList<>(chatBoundary.getMessages());
         mutableMessages.add(this.messageConverter.convertMessageEntityToBoundary(entity));
         chatBoundary.setMessages(mutableMessages);
-
-        this.mongoTemplate.save(this.chatConverter.convertChatBoundaryToEntity(chatBoundary));
+        ChatEntity chatEntity = this.chatConverter.convertChatBoundaryToEntity(chatBoundary);
+        this.mongoTemplate.save(chatEntity);
         System.out.println("Chat updated: " + chatBoundary);
 
         return this.messageConverter.convertMessageEntityToBoundary(entity);
