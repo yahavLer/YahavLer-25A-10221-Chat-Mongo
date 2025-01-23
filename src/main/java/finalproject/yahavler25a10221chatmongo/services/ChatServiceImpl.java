@@ -2,11 +2,14 @@ package finalproject.yahavler25a10221chatmongo.services;
 
 import finalproject.yahavler25a10221chatmongo.boudaries.ChatBoundary;
 import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
+import finalproject.yahavler25a10221chatmongo.boudaries.UserBoundary;
 import finalproject.yahavler25a10221chatmongo.convertors.ChatConverter;
 import finalproject.yahavler25a10221chatmongo.crud.ChatCRUD;
 import finalproject.yahavler25a10221chatmongo.crud.MessageCRUD;
 import finalproject.yahavler25a10221chatmongo.entities.ChatEntity;
+import finalproject.yahavler25a10221chatmongo.entities.UserEntity;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -57,6 +60,7 @@ public class ChatServiceImpl implements ChatService{
     public ChatBoundary addMessageToChat(String user1Id, String user2Id, MessageBoundary messageBoundary) {
         ChatBoundary chatBoundary = findExistingChat(user1Id, user2Id);
         if (chatBoundary == null) {
+            System.out.println("Chat is not exists");
             chatBoundary = createNewChat(user1Id, user2Id);
         }
 
@@ -75,6 +79,7 @@ public class ChatServiceImpl implements ChatService{
     public ChatBoundary getChatByUser1IdAndUser2Id(String user1Id, String user2Id) {
         ChatBoundary chatBoundary = this.mongoTemplate
                 .query(ChatEntity.class)
+                .inCollection("chats")
                 .as(ChatEntity.class)
                 .matching(query(where("user1Id").is(user1Id).andOperator(where("user2Id").is(user2Id))))
                 .first()
@@ -87,7 +92,7 @@ public class ChatServiceImpl implements ChatService{
     public List<ChatBoundary> getChatsByUserId(String userId) {
         List<ChatBoundary> chatBoundaryList = this.mongoTemplate
                 .query(ChatEntity.class)
-                .inCollection(userId)
+                .inCollection("chats")
                 .as(ChatEntity.class)
                 .matching(query(where("user1Id").is(userId).orOperator(where("user2Id").is(userId))))
                 .all()
@@ -99,9 +104,10 @@ public class ChatServiceImpl implements ChatService{
 
 
 
-    private ChatBoundary findExistingChat(String user1Id, String user2Id) {
+    public ChatBoundary findExistingChat(String user1Id, String user2Id) {
         return this.mongoTemplate
                 .query(ChatEntity.class)
+                .inCollection("chats")
                 .matching(query(
                         where("user1Id").is(user1Id).andOperator(where("user2Id").is(user2Id))
                                 .orOperator(
@@ -113,15 +119,30 @@ public class ChatServiceImpl implements ChatService{
                 .orElse(null);
     }
 
-    private ChatBoundary createNewChat(String user1Id, String user2Id) {
+    public ChatBoundary createNewChat(String user1Id, String user2Id) {
         ChatEntity newChat = new ChatEntity();
         newChat.setId(UUID.randomUUID().toString());
         newChat.setUser1Id(user1Id);
         newChat.setUser2Id(user2Id);
         newChat.setCreatedAt(LocalDateTime.now());
         newChat.setMessages(List.of());
-        ChatEntity savedChat = this.mongoTemplate.insert(newChat);
-        return this.chatConverter.convertChatEntityToBoundary(savedChat);
+        newChat =mongoTemplate.insert(ChatEntity.class)
+                .inCollection("chats")
+                .one(newChat);
+        System.out.print("Chat created");
+        return this.chatConverter.convertChatEntityToBoundary(newChat);
+    }
+
+    @Override
+    public List<ChatBoundary> getAllChat(int size, int page) {
+        Query query = new Query();
+        query.limit(size);
+        query.skip(size * page);
+        List<ChatBoundary> chatBoundaryList = this.mongoTemplate
+                .find(query, ChatBoundary.class)
+                .stream()
+                .toList();
+        return chatBoundaryList;
     }
 
 

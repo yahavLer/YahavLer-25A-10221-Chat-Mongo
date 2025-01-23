@@ -16,9 +16,8 @@ public class MessageController {
 
     @PostMapping("/send")
     public MessageBoundary sendMessage(
-            @RequestBody  MessageBoundary messageBoundary,
-            @RequestParam String conversationId) {
-        return messageService.sendMessage(conversationId,messageBoundary);
+            @RequestBody  MessageBoundary messageBoundary) {
+        return messageService.sendMessage(messageBoundary);
     }
 
     @GetMapping("/conversation/{conversationId}")

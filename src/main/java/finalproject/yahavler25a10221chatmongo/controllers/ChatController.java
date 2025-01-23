@@ -2,6 +2,7 @@ package finalproject.yahavler25a10221chatmongo.controllers;
 
 import finalproject.yahavler25a10221chatmongo.boudaries.ChatBoundary;
 import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
+import finalproject.yahavler25a10221chatmongo.boudaries.UserBoundary;
 import finalproject.yahavler25a10221chatmongo.services.ChatService;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,13 @@ public class ChatController {
                                          @RequestParam String user2Id,
                                          @RequestBody MessageBoundary messageBoundary) {
         return chatService.addMessageToChat(user1Id,user2Id, messageBoundary);
+    }
+
+    @GetMapping("/all")
+    public List<ChatBoundary> getAllChat(
+            @RequestParam int size,
+            @RequestParam int page) {
+        return chatService.getAllChat(size, page);
     }
 
 }

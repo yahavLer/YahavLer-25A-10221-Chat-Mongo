@@ -5,7 +5,7 @@ import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
 import java.util.List;
 
 public interface MessageService {
-    MessageBoundary sendMessage(String conversationId, MessageBoundary messageBoundary);
+    MessageBoundary sendMessage(MessageBoundary messageBoundary);
     List<MessageBoundary> getMessagesByConversationId(String conversationId);
     List<MessageBoundary> getMessagesByUserIdToReciverId(String userId, String receiverId);
     List<MessageBoundary> getAllMessages(String userId, int size, int page);

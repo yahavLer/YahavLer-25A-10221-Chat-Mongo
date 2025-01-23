@@ -32,7 +32,9 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = this.userConverter.convertUserBoundaryToEntity(userBoundary);
         userEntity.setId(UUID.randomUUID().toString());
         userEntity.setTimestamp(LocalDateTime.now());
-        userEntity = mongoTemplate.insert(UserEntity.class).one(userEntity);
+        userEntity = mongoTemplate.insert(UserEntity.class)
+                .inCollection("users")
+                .one(userEntity);
         return this.userConverter.convertUserEntityToBoundary(userEntity);
     }
 
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserService {
     public UserBoundary getById(String userId) {
         UserBoundary userBoundary = this.mongoTemplate
                 .query(UserEntity.class)
+                .inCollection("users")
                 .as(UserEntity.class)
                 .matching(query(where("id").is(userId)))
                 .first()

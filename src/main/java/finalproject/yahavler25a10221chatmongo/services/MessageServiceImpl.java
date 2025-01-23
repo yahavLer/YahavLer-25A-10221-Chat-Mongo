@@ -6,9 +6,11 @@ import java.util.UUID;
 
 import finalproject.yahavler25a10221chatmongo.boudaries.ChatBoundary;
 import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
+import finalproject.yahavler25a10221chatmongo.convertors.ChatConverter;
 import finalproject.yahavler25a10221chatmongo.convertors.MessageConverter;
 import finalproject.yahavler25a10221chatmongo.crud.ChatCRUD;
 import finalproject.yahavler25a10221chatmongo.crud.MessageCRUD;
+import finalproject.yahavler25a10221chatmongo.entities.ChatEntity;
 import finalproject.yahavler25a10221chatmongo.entities.MessageEntity;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -26,8 +28,9 @@ public class MessageServiceImpl implements MessageService {
     private MessageCRUD messageCRUD;
     private MessageConverter messageConverter;
     private MongoTemplate mongoTemplate;
+    private ChatConverter chatConverter;
 
-    public MessageServiceImpl(MessageCRUD messageCRUD, MessageConverter messageConverter, MongoTemplate mongoTemplate) {
+    public MessageServiceImpl(ChatConverter chatConverter,MessageCRUD messageCRUD, MessageConverter messageConverter, MongoTemplate mongoTemplate) {
         this.messageCRUD = messageCRUD;
         this.mongoTemplate =mongoTemplate;
         this.messageConverter = messageConverter;
@@ -35,20 +38,57 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    public MessageBoundary sendMessage(String conversationId, MessageBoundary boundary) {
+    public MessageBoundary sendMessage(MessageBoundary boundary) {
         MessageEntity entity = this.messageConverter.convertMessageBoundaryToEntity(boundary);
-        entity.setChatId(conversationId);
         entity.setId(UUID.randomUUID().toString());
         entity.setTimestamp(LocalDateTime.now());
-        entity = mongoTemplate.insert(MessageEntity.class).one(entity);
+        entity = mongoTemplate.insert(MessageEntity.class)
+                .inCollection("messages")
+                .one(entity);
+        ChatBoundary chatBoundary = findExistingChat(entity.getSenderId(), entity.getReceiverId());
+        System.out.print("chatBoundary: "+chatBoundary.toString());
+        if (chatBoundary == null) {
+            chatBoundary= createNewChat(entity.getSenderId(), entity.getReceiverId());
+        }
+        chatBoundary.getMessages().add(this.messageConverter.convertMessageEntityToBoundary(entity));
+        this.mongoTemplate.save(this.chatConverter.convertChatBoundaryToEntity(chatBoundary));
         return this.messageConverter.convertMessageEntityToBoundary(entity);
+    }
+
+    private ChatBoundary findExistingChat(String senderId, String receiverId) {
+        return this.mongoTemplate
+                .query(ChatEntity.class)
+                .inCollection("chats")
+                .matching(query(
+                        where("user1Id").is(senderId).andOperator(where("user2Id").is(receiverId))
+                                .orOperator(
+                                        where("user1Id").is(receiverId).andOperator(where("user2Id").is(senderId))
+                                )
+                ))
+                .first()
+                .map(this.chatConverter::convertChatEntityToBoundary)
+                .orElse(null);
+    }
+
+    public ChatBoundary createNewChat(String user1Id, String user2Id) {
+        ChatEntity newChat = new ChatEntity();
+        newChat.setId(UUID.randomUUID().toString());
+        newChat.setUser1Id(user1Id);
+        newChat.setUser2Id(user2Id);
+        newChat.setCreatedAt(LocalDateTime.now());
+        newChat.setMessages(List.of());
+        newChat =mongoTemplate.insert(ChatEntity.class)
+                .inCollection("chats")
+                .one(newChat);
+        System.out.print("Chat created");
+        return this.chatConverter.convertChatEntityToBoundary(newChat);
     }
 
     @Override
     public List<MessageBoundary> getMessagesByConversationId(String conversationId) {
         List<MessageBoundary> messageBoundaryList=this.mongoTemplate
                 .query(MessageEntity.class)
-                .inCollection(conversationId)
+                .inCollection("messages")
                 .as(MessageEntity.class)
                 .matching(query(where("conversationId").is(conversationId)))
                 .all()
@@ -62,7 +102,7 @@ public class MessageServiceImpl implements MessageService {
     public List<MessageBoundary> getMessagesByUserIdToReciverId(String userId, String receiverId) {
         List<MessageBoundary> messageBoundaryList=this.mongoTemplate
                 .query(MessageEntity.class)
-                .inCollection(userId)
+                .inCollection("messages")
                 .as(MessageEntity.class)
                 .matching(
                         query(where("senderId").is(userId)
@@ -79,7 +119,7 @@ public class MessageServiceImpl implements MessageService {
     public List<MessageBoundary> getMessagesByUserIdFromSenderId(String userId, String senderId) {
         List<MessageBoundary> messageBoundaryList=this.mongoTemplate
                 .query(MessageEntity.class)
-                .inCollection(userId)
+                .inCollection("messages")
                 .as(MessageEntity.class)
                 .matching(
                         query(where("senderId").is(senderId)
@@ -115,7 +155,7 @@ public class MessageServiceImpl implements MessageService {
         LocalDateTime now = LocalDateTime.now();
         MessageBoundary messageBoundary = this.mongoTemplate
                 .query(MessageEntity.class)
-                .inCollection(messageId)
+                .inCollection("messages")
                 .as(MessageEntity.class)
                 .matching(query(where("timestamp").lt(now)).addCriteria(where("id").is(messageId)))
                 .first()
