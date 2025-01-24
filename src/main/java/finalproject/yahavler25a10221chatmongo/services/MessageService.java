@@ -14,6 +14,6 @@ public interface MessageService {
     List<MessageBoundary> getMessagesByUserIdFromSenderId(String userId, String senderId);
     // List<MessageBoundary> searchMessagesByKey(String senderId, String receiverId, String keyword);
    // List<MessageBoundary> getMessagesByDateRange(String senderId, String receiverId, LocalDateTime startDate, LocalDateTime endDate);
-   // void deleteAll();
+   void deleteAll();
 }
 

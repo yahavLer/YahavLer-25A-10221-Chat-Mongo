@@ -142,7 +142,6 @@ public class MessageServiceImpl implements MessageService {
         return messageBoundaryList;
     }
 
-
     @Override
     public List<MessageBoundary> getAllMessages(int size, int page) {
         Query query = new Query();
@@ -168,6 +167,11 @@ public class MessageServiceImpl implements MessageService {
                 .map(this.messageConverter::convertMessageEntityToBoundary)
                 .orElseThrow(() -> new RuntimeException("could not find message by id: " + messageId));
         return messageBoundary;
+    }
+
+    @Override
+    public void deleteAll() {
+        this.messageCRUD.deleteAll();
     }
 
 /*

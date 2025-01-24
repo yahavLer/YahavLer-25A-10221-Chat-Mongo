@@ -146,5 +146,9 @@ public class ChatServiceImpl implements ChatService{
         return chatBoundaryList;
     }
 
+    @Override
+    public void deleteAll() {
+        this.chatCRUD.deleteAll();
+    }
 
 }

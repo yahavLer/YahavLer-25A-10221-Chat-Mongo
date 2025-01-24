@@ -51,4 +51,9 @@ public class ChatController {
         return chatService.getAllChat(size, page);
     }
 
+    @DeleteMapping("/delete")
+    public void deleteAll() {
+        chatService.deleteAll();
+    }
+
 }

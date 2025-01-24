@@ -13,6 +13,5 @@ public interface ChatService {
     ChatBoundary addMessageToChat(String user1Id, String user2Id, MessageBoundary messageBoundary);
     ChatBoundary getChatByUser1IdAndUser2Id(String user1Id, String user2Id);
     List<ChatBoundary> getAllChat(int size, int page);
-
-    //void deleteChat(String chatId);
-}
+    void deleteAll();
+    }

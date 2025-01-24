@@ -47,6 +47,11 @@ public class MessageController {
             @RequestParam int page) {
         return messageService.getAllMessages(size, page);
     }
+
+    @DeleteMapping("/delete")
+    public void deleteAll() {
+        messageService.deleteAll();
+    }
 /*
     @GetMapping("/search")
     public List<MessageBoundary> searchMessagesByKey(
@@ -66,11 +71,6 @@ public class MessageController {
                 senderId, receiverId, LocalDateTime.parse(startDate), LocalDateTime.parse(endDate));
     }
 
-    @DeleteMapping
-    public String deleteAllMessages() {
-        messageService.deleteAll();
-        return "All messages have been deleted";
-    }
 
     @PostMapping("/add")
     public MessageBoundary addMessage(
