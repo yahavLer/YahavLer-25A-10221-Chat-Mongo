@@ -8,7 +8,7 @@ public interface MessageService {
     MessageBoundary sendMessage(MessageBoundary messageBoundary);
     List<MessageBoundary> getMessagesByConversationId(String conversationId);
     List<MessageBoundary> getMessagesByUserIdToReciverId(String userId, String receiverId);
-    List<MessageBoundary> getAllMessages(String userId, int size, int page);
+    List<MessageBoundary> getAllMessages(int size, int page);
     MessageBoundary getMessageById(String messageId);
     //MessageBoundary addMessage(String content, String senderId, String receiverId);
     List<MessageBoundary> getMessagesByUserIdFromSenderId(String userId, String senderId);

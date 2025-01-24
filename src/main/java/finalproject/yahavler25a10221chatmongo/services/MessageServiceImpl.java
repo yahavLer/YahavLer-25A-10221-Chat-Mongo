@@ -144,18 +144,15 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    public List<MessageBoundary> getAllMessages(String userId, int size, int page) {
-        Query query = new Query()
-                .addCriteria(
-                        new Criteria().orOperator(
-                                Criteria.where("senderId").is(userId),
-                                Criteria.where("receiverId").is(userId)
-                        )
-                )
-                .with(Sort.by(Sort.Order.desc("timestamp"))) // Sort by timestamp in descending order
-                .skip((long) page * size) // Skip records for pagination
-                .limit(size); // Limit the number of records per page
-        List<MessageBoundary> messageBoundaryList = this.mongoTemplate.find(query, MessageBoundary.class);
+    public List<MessageBoundary> getAllMessages(int size, int page) {
+        Query query = new Query();
+        query.limit(size);
+        query.skip(size * page);
+        List<MessageBoundary> messageBoundaryList = this.mongoTemplate
+                .find(query, MessageEntity.class)
+                .stream()
+                .map(this.messageConverter::convertMessageEntityToBoundary)
+                .toList();
         return messageBoundaryList;
     }
 

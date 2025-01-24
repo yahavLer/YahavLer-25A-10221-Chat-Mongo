@@ -43,10 +43,9 @@ public class MessageController {
 
     @GetMapping("/all")
     public List<MessageBoundary> getAllMessages(
-            @RequestParam String userId,
             @RequestParam int size,
             @RequestParam int page) {
-        return messageService.getAllMessages(userId,size, page);
+        return messageService.getAllMessages(size, page);
     }
 /*
     @GetMapping("/search")

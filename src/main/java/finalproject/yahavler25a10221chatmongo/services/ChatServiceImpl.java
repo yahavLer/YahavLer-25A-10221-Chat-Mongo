@@ -139,8 +139,9 @@ public class ChatServiceImpl implements ChatService{
         query.limit(size);
         query.skip(size * page);
         List<ChatBoundary> chatBoundaryList = this.mongoTemplate
-                .find(query, ChatBoundary.class)
+                .find(query, ChatEntity.class)
                 .stream()
+                .map(this.chatConverter::convertChatEntityToBoundary)
                 .toList();
         return chatBoundaryList;
     }
