@@ -149,6 +149,7 @@ public class ChatServiceImpl implements ChatService{
     @Override
     public void deleteAll() {
         this.chatCRUD.deleteAll();
+        this.mongoTemplate.remove(new Query(), ChatEntity.class);
     }
 
 }

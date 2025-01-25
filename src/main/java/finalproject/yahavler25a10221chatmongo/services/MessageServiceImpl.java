@@ -52,31 +52,34 @@ public class MessageServiceImpl implements MessageService {
             chatBoundary= createNewChat(entity.getSenderId(), entity.getReceiverId());
         }
 
-        System.out.print("chatBoundary: "+chatBoundary.toString());
+        List<MessageBoundary> mutableMessages = chatBoundary.getMessages();
+        if (mutableMessages == null) {
+            mutableMessages = new ArrayList<>();
+        }
 
-        List<MessageBoundary> mutableMessages = new ArrayList<>(chatBoundary.getMessages());
         mutableMessages.add(this.messageConverter.convertMessageEntityToBoundary(entity));
         chatBoundary.setMessages(mutableMessages);
+
         ChatEntity chatEntity = this.chatConverter.convertChatBoundaryToEntity(chatBoundary);
         this.mongoTemplate.save(chatEntity);
+
         System.out.println("Chat updated: " + chatBoundary);
 
         return this.messageConverter.convertMessageEntityToBoundary(entity);
     }
 
     private ChatBoundary findExistingChat(String senderId, String receiverId) {
-        return this.mongoTemplate
-                .query(ChatEntity.class)
-                .inCollection("chats")
-                .matching(query(
-                        where("user1Id").is(senderId).andOperator(where("user2Id").is(receiverId))
-                                .orOperator(
-                                        where("user1Id").is(receiverId).andOperator(where("user2Id").is(senderId))
-                                )
-                ))
-                .first()
-                .map(this.chatConverter::convertChatEntityToBoundary)
-                .orElse(null);
+        Query query = new Query();
+        query.addCriteria(new Criteria().orOperator(
+                Criteria.where("user1Id").is(senderId).and("user2Id").is(receiverId),
+                Criteria.where("user1Id").is(receiverId).and("user2Id").is(senderId)
+        ));
+
+        ChatEntity chatEntity = this.mongoTemplate.findOne(query, ChatEntity.class, "chats");
+        if (chatEntity == null) {
+            return null;
+        }
+        return this.chatConverter.convertChatEntityToBoundary(chatEntity);
     }
 
     public ChatBoundary createNewChat(String user1Id, String user2Id) {
@@ -172,8 +175,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void deleteAll() {
         this.messageCRUD.deleteAll();
+        this.mongoTemplate.remove(new Query(), MessageEntity.class);
     }
-
+}
 /*
 @Override
     public MessageBoundary addMessage(String content, String senderId, String receiverId) {
@@ -187,4 +191,4 @@ public class MessageServiceImpl implements MessageService {
     }
  */
 
-}
+
