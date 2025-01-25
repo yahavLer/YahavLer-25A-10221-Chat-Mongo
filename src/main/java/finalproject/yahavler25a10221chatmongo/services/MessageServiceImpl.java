@@ -61,7 +61,7 @@ public class MessageServiceImpl implements MessageService {
         chatBoundary.setMessages(mutableMessages);
 
         ChatEntity chatEntity = this.chatConverter.convertChatBoundaryToEntity(chatBoundary);
-        this.mongoTemplate.save(chatEntity);
+        this.mongoTemplate.save(chatEntity, "chats");
 
         System.out.println("Chat updated: " + chatBoundary);
 
@@ -88,7 +88,7 @@ public class MessageServiceImpl implements MessageService {
         newChat.setUser1Id(user1Id);
         newChat.setUser2Id(user2Id);
         newChat.setCreatedAt(LocalDateTime.now());
-        newChat.setMessages(List.of());
+        newChat.setMessages(new ArrayList<>());
         newChat =mongoTemplate.insert(ChatEntity.class)
                 .inCollection("chats")
                 .one(newChat);
