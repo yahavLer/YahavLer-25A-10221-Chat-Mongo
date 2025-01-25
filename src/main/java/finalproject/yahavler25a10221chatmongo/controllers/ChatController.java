@@ -37,13 +37,6 @@ public class ChatController {
         return chatService.getChatByUser1IdAndUser2Id(user1Id, user2Id);
     }
 
-    @PostMapping("/add-message")
-    public ChatBoundary addMessageToChat(@RequestParam String user1Id,
-                                         @RequestParam String user2Id,
-                                         @RequestBody MessageBoundary messageBoundary) {
-        return chatService.addMessageToChat(user1Id,user2Id, messageBoundary);
-    }
-
     @GetMapping("/all")
     public List<ChatBoundary> getAllChat(
             @RequestParam int size,
