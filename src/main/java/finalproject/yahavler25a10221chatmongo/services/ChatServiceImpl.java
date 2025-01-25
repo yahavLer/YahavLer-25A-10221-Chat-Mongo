@@ -58,7 +58,7 @@ public class ChatServiceImpl implements ChatService{
 
 
     @Override
-    public ChatBoundary getChatByUser1IdAndUser2Id(String user1Id, String user2Id) {
+    public ChatBoundary getChatBetweenUsers(String user1Id, String user2Id) {
         ChatBoundary chatBoundary = this.mongoTemplate
                 .query(ChatEntity.class)
                 .inCollection("chats")

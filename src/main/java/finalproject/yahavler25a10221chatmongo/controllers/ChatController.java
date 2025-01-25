@@ -1,8 +1,6 @@
 package finalproject.yahavler25a10221chatmongo.controllers;
 
 import finalproject.yahavler25a10221chatmongo.boudaries.ChatBoundary;
-import finalproject.yahavler25a10221chatmongo.boudaries.MessageBoundary;
-import finalproject.yahavler25a10221chatmongo.boudaries.UserBoundary;
 import finalproject.yahavler25a10221chatmongo.services.ChatService;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +31,8 @@ public class ChatController {
     }
 
     @GetMapping("user1/{user1Id}/user2/{user2Id}")
-    public ChatBoundary getChatByUser1IdAndUser2Id(@PathVariable("user1Id") String user1Id, @PathVariable("user2Id") String user2Id) {
-        return chatService.getChatByUser1IdAndUser2Id(user1Id, user2Id);
+    public ChatBoundary getChatBetweenUsers(@PathVariable("user1Id") String user1Id, @PathVariable("user2Id") String user2Id) {
+        return chatService.getChatBetweenUsers(user1Id, user2Id);
     }
 
     @GetMapping("/all")
