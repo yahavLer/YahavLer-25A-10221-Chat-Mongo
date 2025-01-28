@@ -26,8 +26,8 @@ public class UserController {
     }
 
     @GetMapping("/username/{username}")
-    public UserBoundary getByUsername(@RequestParam("username") String username) {
-        return userService.getByUsername(username);
+    public UserBoundary getByUsernameAndPhone(@RequestParam("username") String username, @RequestParam("phoneNumber") String phoneNumber) {
+        return userService.getByUsernameAndPhone(username, phoneNumber);
     }
 
     @GetMapping("/all")

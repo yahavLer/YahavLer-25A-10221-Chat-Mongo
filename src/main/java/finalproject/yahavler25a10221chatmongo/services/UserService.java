@@ -10,5 +10,5 @@ public interface UserService {
     List<UserBoundary> getAllUsers(int size, int page);
     void deleteUser(String userId);
     void deleteAllUsers();
-    UserBoundary getByUsername(String username);
+    UserBoundary getByUsernameAndPhone(String username, String phoneNumber);
 }

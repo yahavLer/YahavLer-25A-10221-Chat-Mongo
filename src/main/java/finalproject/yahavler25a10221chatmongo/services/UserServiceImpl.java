@@ -76,14 +76,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserBoundary getByUsername(String username) {
+    public UserBoundary getByUsernameAndPhone(String username, String phoneNumber) {
         UserBoundary userBoundary = this.mongoTemplate
                 .query(UserEntity.class)
                 .as(UserEntity.class)
-                .matching(query(where("username").is(username)))
+                .matching(
+                        query(where("username").is(username)
+                                .and("phoneNumber").is(phoneNumber))
+                )
                 .first()
                 .map(this.userConverter::convertUserEntityToBoundary)
-                .orElseThrow(() -> new RuntimeException("could not find user by username: " + username));
-        return userBoundary;    }
+                .orElseThrow(() -> new RuntimeException("Could not find user with username: " + username + " and phone number: " + phoneNumber));
+        return userBoundary;
+    }
 
 }
