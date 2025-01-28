@@ -25,7 +25,7 @@ public class UserController {
         return userService.getById(userId);
     }
 
-    @GetMapping("/username/{username}")
+    @GetMapping("/username/{username}/phoneNumber/{phoneNumber}")
     public UserBoundary getByUsernameAndPhone(@RequestParam("username") String username, @RequestParam("phoneNumber") String phoneNumber) {
         return userService.getByUsernameAndPhone(username, phoneNumber);
     }
