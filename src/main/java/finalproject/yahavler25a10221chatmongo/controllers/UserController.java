@@ -21,12 +21,12 @@ public class UserController {
     }
 
     @GetMapping("/userId/{userId}")
-    public UserBoundary getById(@RequestParam("userId") String userId) {
+    public UserBoundary getById(@PathVariable("userId") String userId) {
         return userService.getById(userId);
     }
 
     @GetMapping("/username/{username}/phoneNumber/{phoneNumber}")
-    public UserBoundary getByUsernameAndPhone(@RequestParam("username") String username, @RequestParam("phoneNumber") String phoneNumber) {
+    public UserBoundary getByUsernameAndPhone(@PathVariable("username") String username, @PathVariable("phoneNumber") String phoneNumber) {
         return userService.getByUsernameAndPhone(username, phoneNumber);
     }
 
