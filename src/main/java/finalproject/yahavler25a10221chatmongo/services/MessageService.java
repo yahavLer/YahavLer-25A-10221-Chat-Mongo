@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MessageService {
     MessageBoundary sendMessage(MessageBoundary messageBoundary);
-    List<MessageBoundary> getMessagesByConversationId(String conversationId);
+    List<MessageBoundary> getMessagesByChatId(String chatId);
     List<MessageBoundary> getMessagesByUserIdToReciverId(String userId, String receiverId);
     List<MessageBoundary> getAllMessages(int size, int page);
     MessageBoundary getMessageById(String messageId);

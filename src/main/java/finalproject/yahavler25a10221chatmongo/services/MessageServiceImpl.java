@@ -97,12 +97,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<MessageBoundary> getMessagesByConversationId(String conversationId) {
+    public List<MessageBoundary> getMessagesByChatId(String chatId) {
         List<MessageBoundary> messageBoundaryList=this.mongoTemplate
                 .query(MessageEntity.class)
                 .inCollection("messages")
                 .as(MessageEntity.class)
-                .matching(query(where("conversationId").is(conversationId)))
+                .matching(query(where("chatId").is(chatId)))
                 .all()
                 .stream()
                 .map(this.messageConverter::convertMessageEntityToBoundary)

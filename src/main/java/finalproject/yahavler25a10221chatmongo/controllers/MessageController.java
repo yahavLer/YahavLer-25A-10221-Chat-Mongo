@@ -20,9 +20,9 @@ public class MessageController {
         return messageService.sendMessage(messageBoundary);
     }
 
-    @GetMapping("/conversation/{conversationId}")
-    public List<MessageBoundary> getMessagesByConversationId(@PathVariable("conversationId") String conversationId) {
-        return messageService.getMessagesByConversationId(conversationId);
+    @GetMapping("/chat/{chatId}")
+    public List<MessageBoundary> getMessagesByChatId(@PathVariable("chatId") String chatId) {
+        return messageService.getMessagesByChatId(chatId);
     }
 
     @GetMapping("/user/{userId}/receiver/{receiverId}")
