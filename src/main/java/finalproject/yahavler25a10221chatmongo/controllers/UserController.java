@@ -36,4 +36,14 @@ public class UserController {
             @RequestParam int page) {
         return userService.getAllUsers(size, page);
     }
+
+    @DeleteMapping("/delete")
+    public void deleteAllUsers() {
+        userService.deleteAllUsers();
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public void deleteUser(@PathVariable("userId") String userId) {
+        userService.deleteUser(userId);
+    }
 }

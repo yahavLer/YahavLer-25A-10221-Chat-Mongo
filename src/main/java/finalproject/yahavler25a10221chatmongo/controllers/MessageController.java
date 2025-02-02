@@ -34,8 +34,6 @@ public class MessageController {
         return messageService.getMessageById(messageId);
     }
 
-
-
     @GetMapping("/all")
     public List<MessageBoundary> getAllMessages(
             @RequestParam int size,
@@ -47,33 +45,6 @@ public class MessageController {
     public void deleteAll() {
         messageService.deleteAll();
     }
-/*
-    @GetMapping("/search")
-    public List<MessageBoundary> searchMessagesByKey(
-            @RequestParam String senderId,
-            @RequestParam String receiverId,
-            @RequestParam String keyword) {
-        return messageService.searchMessagesByKey(senderId, receiverId, keyword);
-    }
 
-    @GetMapping("/date-range")
-    public List<MessageBoundary> getMessagesByDateRange(
-            @RequestParam String senderId,
-            @RequestParam String receiverId,
-            @RequestParam String startDate,
-            @RequestParam String endDate) {
-        return messageService.getMessagesByDateRange(
-                senderId, receiverId, LocalDateTime.parse(startDate), LocalDateTime.parse(endDate));
-    }
-
-
-    @PostMapping("/add")
-    public MessageBoundary addMessage(
-            @RequestParam String content,
-            @RequestParam String senderId,
-            @RequestParam String receiverId) {
-        return messageService.addMessage(content, senderId, receiverId);
-    }
- */
 }
 

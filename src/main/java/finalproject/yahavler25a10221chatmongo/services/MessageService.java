@@ -9,10 +9,7 @@ public interface MessageService {
     List<MessageBoundary> getMessagesByUserIdToReciverId(String userId, String receiverId);
     List<MessageBoundary> getAllMessages(int size, int page);
     MessageBoundary getMessageById(String messageId);
-    //MessageBoundary addMessage(String content, String senderId, String receiverId);
     List<MessageBoundary> getMessagesByUserIdFromSenderId(String userId, String senderId);
-    // List<MessageBoundary> searchMessagesByKey(String senderId, String receiverId, String keyword);
-   // List<MessageBoundary> getMessagesByDateRange(String senderId, String receiverId, LocalDateTime startDate, LocalDateTime endDate);
-   void deleteAll();
+    void deleteAll();
 }
 

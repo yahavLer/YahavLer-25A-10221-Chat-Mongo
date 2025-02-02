@@ -164,17 +164,6 @@ public class MessageServiceImpl implements MessageService {
         this.mongoTemplate.remove(new Query(), MessageEntity.class);
     }
 }
-/*
-@Override
-    public MessageBoundary addMessage(String content, String senderId, String receiverId) {
-        MessageBoundary message = new MessageBoundary();
-        message.setId(UUID.randomUUID().toString());
-        message.setContent(content);
-        message.setSenderId(senderId);
-        message.setReceiverId(receiverId);
-        message.setTimestamp(LocalDateTime.now());
-        return message;
-    }
- */
+
 
 

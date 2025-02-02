@@ -66,13 +66,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String userId) {
-        //this.mongoTemplate.remove(query(where("id").is(userId)), UserEntity.class);
         this.userCRUD.deleteById(userId);
+        this.mongoTemplate.remove(query(where("id").is(userId)), UserEntity.class);
     }
 
     @Override
     public void deleteAllUsers() {
         this.userCRUD.deleteAll();
+        this.mongoTemplate.remove(new Query(), UserEntity.class);
     }
 
     @Override
