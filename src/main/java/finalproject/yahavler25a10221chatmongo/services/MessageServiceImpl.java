@@ -97,20 +97,6 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<MessageBoundary> getMessagesByChatId(String chatId) {
-        List<MessageBoundary> messageBoundaryList=this.mongoTemplate
-                .query(MessageEntity.class)
-                .inCollection("messages")
-                .as(MessageEntity.class)
-                .matching(query(where("chatId").is(chatId)))
-                .all()
-                .stream()
-                .map(this.messageConverter::convertMessageEntityToBoundary)
-                .toList();
-        return messageBoundaryList;
-    }
-
-    @Override
     public List<MessageBoundary> getMessagesByUserIdToReciverId(String userId, String receiverId) {
         List<MessageBoundary> messageBoundaryList=this.mongoTemplate
                 .query(MessageEntity.class)
